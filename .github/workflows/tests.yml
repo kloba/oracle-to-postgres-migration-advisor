@@ -34,7 +34,7 @@ jobs:
           node-version: 22
       - name: Build the Contoso Store assessment
         run: examples/contoso-store/run.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: contoso-store-assessment
           path: examples/contoso-store/output/contoso-store-assessment.pdf
