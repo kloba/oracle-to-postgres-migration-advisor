@@ -18,7 +18,7 @@ jobs:
           node-version: 22
       - name: Every source resolves and the register was read recently
         run: node tools/check-sources.mjs --max-age-days 45 --json source-report.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: source-report
