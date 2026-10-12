@@ -1,0 +1,1230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kloba/oracle-to-postgres-migration-advisor/schemas/output.schema.json",
+  "title": "Oracle to PostgreSQL advisor: recommendation",
+  "description": "The object the engine returns and the card renders. reference/output-contract.md defines the meaning; tools/advisor/engine.mjs selfCheck() enforces the 18 invariants that a schema cannot express.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "normalizedProfile",
+    "eligibilityTrace",
+    "recommendation",
+    "alternative",
+    "shortlist",
+    "scores",
+    "methodCandidates",
+    "selectedMethods",
+    "methodGateTrace",
+    "methodGaps",
+    "blockers",
+    "unknowns",
+    "assumptions",
+    "evidenceRequired",
+    "largestRisk",
+    "notes",
+    "nextActions",
+    "costLevers",
+    "programmeFit",
+    "retired"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "knowledgeBaseVersion",
+        "decisionRulesVersion",
+        "recommendationStatus",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "knowledgeBaseVersion": {
+          "type": "string",
+          "pattern": "^v\\d+\\.\\d+"
+        },
+        "decisionRulesVersion": {
+          "type": "string",
+          "pattern": "^v\\d+\\.\\d+"
+        },
+        "recommendationStatus": {
+          "enum": [
+            "provisional",
+            "shortlist"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "low",
+            "medium"
+          ]
+        },
+        "evaluatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "normalizedProfile": {
+      "type": "object"
+    },
+    "eligibilityTrace": {
+      "type": "object",
+      "required": [
+        "pg_flex",
+        "pg_elastic",
+        "horizondb",
+        "pg_vm",
+        "pg_aks",
+        "cosmos_pg",
+        "oracle_dbaz",
+        "oracle_vm"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "pg_flex": {
+          "type": "object",
+          "required": [
+            "label",
+            "state",
+            "ruleId",
+            "reason",
+            "contributing"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "eligible",
+                "eligible_with_remediation",
+                "unsupported",
+                "excluded_by_preference",
+                "unknown_requires_assessment"
+              ]
+            },
+            "ruleId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^OP-[A-Z0-9-]+$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contributing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "state",
+                  "ruleId",
+                  "reason"
+                ],
+                "properties": {
+                  "state": {
+                    "enum": [
+                      "eligible",
+                      "eligible_with_remediation",
+                      "unsupported",
+                      "excluded_by_preference",
+                      "unknown_requires_assessment"
+                    ]
+                  },
+                  "ruleId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "pg_elastic": {
+          "type": "object",
+          "required": [
+            "label",
+            "state",
+            "ruleId",
+            "reason",
+            "contributing"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "eligible",
+                "eligible_with_remediation",
+                "unsupported",
+                "excluded_by_preference",
+                "unknown_requires_assessment"
+              ]
+            },
+            "ruleId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^OP-[A-Z0-9-]+$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contributing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "state",
+                  "ruleId",
+                  "reason"
+                ],
+                "properties": {
+                  "state": {
+                    "enum": [
+                      "eligible",
+                      "eligible_with_remediation",
+                      "unsupported",
+                      "excluded_by_preference",
+                      "unknown_requires_assessment"
+                    ]
+                  },
+                  "ruleId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "horizondb": {
+          "type": "object",
+          "required": [
+            "label",
+            "state",
+            "ruleId",
+            "reason",
+            "contributing"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "eligible",
+                "eligible_with_remediation",
+                "unsupported",
+                "excluded_by_preference",
+                "unknown_requires_assessment"
+              ]
+            },
+            "ruleId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^OP-[A-Z0-9-]+$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contributing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "state",
+                  "ruleId",
+                  "reason"
+                ],
+                "properties": {
+                  "state": {
+                    "enum": [
+                      "eligible",
+                      "eligible_with_remediation",
+                      "unsupported",
+                      "excluded_by_preference",
+                      "unknown_requires_assessment"
+                    ]
+                  },
+                  "ruleId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "pg_vm": {
+          "type": "object",
+          "required": [
+            "label",
+            "state",
+            "ruleId",
+            "reason",
+            "contributing"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "eligible",
+                "eligible_with_remediation",
+                "unsupported",
+                "excluded_by_preference",
+                "unknown_requires_assessment"
+              ]
+            },
+            "ruleId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^OP-[A-Z0-9-]+$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contributing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "state",
+                  "ruleId",
+                  "reason"
+                ],
+                "properties": {
+                  "state": {
+                    "enum": [
+                      "eligible",
+                      "eligible_with_remediation",
+                      "unsupported",
+                      "excluded_by_preference",
+                      "unknown_requires_assessment"
+                    ]
+                  },
+                  "ruleId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "pg_aks": {
+          "type": "object",
+          "required": [
+            "label",
+            "state",
+            "ruleId",
+            "reason",
+            "contributing"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "eligible",
+                "eligible_with_remediation",
+                "unsupported",
+                "excluded_by_preference",
+                "unknown_requires_assessment"
+              ]
+            },
+            "ruleId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^OP-[A-Z0-9-]+$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contributing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "state",
+                  "ruleId",
+                  "reason"
+                ],
+                "properties": {
+                  "state": {
+                    "enum": [
+                      "eligible",
+                      "eligible_with_remediation",
+                      "unsupported",
+                      "excluded_by_preference",
+                      "unknown_requires_assessment"
+                    ]
+                  },
+                  "ruleId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "cosmos_pg": {
+          "type": "object",
+          "required": [
+            "label",
+            "state",
+            "ruleId",
+            "reason",
+            "contributing"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "eligible",
+                "eligible_with_remediation",
+                "unsupported",
+                "excluded_by_preference",
+                "unknown_requires_assessment"
+              ]
+            },
+            "ruleId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^OP-[A-Z0-9-]+$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contributing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "state",
+                  "ruleId",
+                  "reason"
+                ],
+                "properties": {
+                  "state": {
+                    "enum": [
+                      "eligible",
+                      "eligible_with_remediation",
+                      "unsupported",
+                      "excluded_by_preference",
+                      "unknown_requires_assessment"
+                    ]
+                  },
+                  "ruleId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "oracle_dbaz": {
+          "type": "object",
+          "required": [
+            "label",
+            "state",
+            "ruleId",
+            "reason",
+            "contributing"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "eligible",
+                "eligible_with_remediation",
+                "unsupported",
+                "excluded_by_preference",
+                "unknown_requires_assessment"
+              ]
+            },
+            "ruleId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^OP-[A-Z0-9-]+$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contributing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "state",
+                  "ruleId",
+                  "reason"
+                ],
+                "properties": {
+                  "state": {
+                    "enum": [
+                      "eligible",
+                      "eligible_with_remediation",
+                      "unsupported",
+                      "excluded_by_preference",
+                      "unknown_requires_assessment"
+                    ]
+                  },
+                  "ruleId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "oracle_vm": {
+          "type": "object",
+          "required": [
+            "label",
+            "state",
+            "ruleId",
+            "reason",
+            "contributing"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "eligible",
+                "eligible_with_remediation",
+                "unsupported",
+                "excluded_by_preference",
+                "unknown_requires_assessment"
+              ]
+            },
+            "ruleId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^OP-[A-Z0-9-]+$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contributing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "state",
+                  "ruleId",
+                  "reason"
+                ],
+                "properties": {
+                  "state": {
+                    "enum": [
+                      "eligible",
+                      "eligible_with_remediation",
+                      "unsupported",
+                      "excluded_by_preference",
+                      "unknown_requires_assessment"
+                    ]
+                  },
+                  "ruleId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "recommendation": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "target",
+            "label",
+            "ruleId",
+            "why",
+            "postgresMajor",
+            "remediation"
+          ],
+          "properties": {
+            "target": {
+              "enum": [
+                "pg_flex",
+                "pg_elastic",
+                "horizondb",
+                "pg_vm",
+                "pg_aks",
+                "cosmos_pg",
+                "oracle_dbaz",
+                "oracle_vm"
+              ]
+            },
+            "label": {
+              "type": "string"
+            },
+            "ruleId": {
+              "type": "string",
+              "pattern": "^OP-"
+            },
+            "why": {
+              "type": "string"
+            },
+            "postgresMajor": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 15
+            },
+            "postgresVersionNote": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "remediation": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "redesign",
+                    "workaround",
+                    "unknown"
+                  ],
+                  "properties": {
+                    "redesign": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "feature",
+                          "label"
+                        ],
+                        "properties": {
+                          "feature": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "note": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "sources": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "workaround": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "feature",
+                          "label"
+                        ],
+                        "properties": {
+                          "feature": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "note": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "sources": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "unknown": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "feature",
+                          "label"
+                        ],
+                        "properties": {
+                          "feature": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "note": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "sources": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "alternative": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "target",
+            "label",
+            "wins"
+          ],
+          "properties": {
+            "target": {
+              "enum": [
+                "pg_flex",
+                "pg_elastic",
+                "horizondb",
+                "pg_vm",
+                "pg_aks",
+                "cosmos_pg",
+                "oracle_dbaz",
+                "oracle_vm"
+              ]
+            },
+            "label": {
+              "type": "string"
+            },
+            "wins": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "shortlist": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "target",
+              "label",
+              "state",
+              "why",
+              "separatedBy"
+            ],
+            "properties": {
+              "target": {
+                "enum": [
+                  "pg_flex",
+                  "pg_elastic",
+                  "horizondb",
+                  "pg_vm",
+                  "pg_aks",
+                  "cosmos_pg",
+                  "oracle_dbaz",
+                  "oracle_vm"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "state": {
+                "enum": [
+                  "eligible",
+                  "eligible_with_remediation",
+                  "unsupported",
+                  "excluded_by_preference",
+                  "unknown_requires_assessment"
+                ]
+              },
+              "why": {
+                "type": "string"
+              },
+              "separatedBy": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "methodCandidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "family",
+          "role",
+          "status",
+          "reason",
+          "ruleId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_]+$"
+          },
+          "family": {
+            "enum": [
+              "conversion",
+              "data",
+              "validation",
+              "assessment",
+              "overlay"
+            ]
+          },
+          "role": {
+            "enum": [
+              "migration",
+              "assessment",
+              "transport",
+              "overlay",
+              "out-of-scope",
+              "conversion",
+              "validation",
+              "secondary",
+              "primary"
+            ]
+          },
+          "status": {
+            "enum": [
+              "available",
+              "unavailable",
+              "refused",
+              "unknown_requires_assessment"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ruleId": {
+            "type": "string",
+            "pattern": "^OP-"
+          }
+        }
+      }
+    },
+    "selectedMethods": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "schemaConversion",
+            "dataMovement",
+            "dataFamily",
+            "cutoverDowntime"
+          ],
+          "properties": {
+            "schemaConversion": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "dataMovement": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "dataFamily": {
+              "enum": [
+                "online",
+                "offline",
+                "unknown"
+              ]
+            },
+            "cutoverDowntime": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "methodGateTrace": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "schemaConversion",
+            "dataMovement"
+          ],
+          "properties": {
+            "schemaConversion": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "method",
+                    "result",
+                    "gates"
+                  ],
+                  "properties": {
+                    "method": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "enum": [
+                        "passed",
+                        "failed",
+                        "unknown_requires_assessment"
+                      ]
+                    },
+                    "gates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "rule",
+                          "result",
+                          "reason"
+                        ],
+                        "properties": {
+                          "rule": {
+                            "type": "string",
+                            "pattern": "^OP-"
+                          },
+                          "result": {
+                            "enum": [
+                              "passed",
+                              "failed",
+                              "unknown_requires_assessment"
+                            ]
+                          },
+                          "reason": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "dataMovement": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "method",
+                    "result",
+                    "gates"
+                  ],
+                  "properties": {
+                    "method": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "enum": [
+                        "passed",
+                        "failed",
+                        "unknown_requires_assessment"
+                      ]
+                    },
+                    "gates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "rule",
+                          "result",
+                          "reason"
+                        ],
+                        "properties": {
+                          "rule": {
+                            "type": "string",
+                            "pattern": "^OP-"
+                          },
+                          "result": {
+                            "enum": [
+                              "passed",
+                              "failed",
+                              "unknown_requires_assessment"
+                            ]
+                          },
+                          "reason": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "methodGaps": {
+      "type": "array",
+      "description": "Steps Microsoft has no product for (OP-SCOPE). No substitute is named.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "ruleId",
+          "text"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "enum": [
+              "SCHEMA_CONVERSION",
+              "ONLINE_CAPTURE"
+            ]
+          },
+          "ruleId": {
+            "const": "OP-SCOPE"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "feature",
+          "label",
+          "why"
+        ],
+        "properties": {
+          "feature": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "why": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "field",
+          "why",
+          "rules"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^OP-"
+            }
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidenceRequired": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "field",
+          "evidence"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "largestRisk": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "nextActions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "costLevers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "programmeFit": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "retired": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "item",
+          "use"
+        ],
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "use": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

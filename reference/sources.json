@@ -1,0 +1,504 @@
+{
+  "schema": "oracle-to-postgres-migration-advisor.sources/v1",
+  "description": "Every URL the knowledge base and rule constants cite. Each was fetched and read on the date in `checked`; `pageDate` is the page's own date where it shows one.",
+  "checked": "2026-10-12",
+  "sources": [
+    {
+      "id": "ms-fs-limits",
+      "title": "Azure Database for PostgreSQL limits",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/configure-maintain/concepts-limits",
+      "pageDate": "2026-07-08",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-extensions-versions",
+      "title": "Extension versions by PostgreSQL major",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/extensions/concepts-extensions-versions",
+      "pageDate": "2026-07-10",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-supported-versions",
+      "title": "Supported PostgreSQL versions",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/configure-maintain/concepts-supported-versions",
+      "pageDate": "2026-08-26",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-overview",
+      "title": "Azure Database for PostgreSQL overview (regions, HA, V6)",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/overview",
+      "pageDate": "2026-09-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-compute",
+      "title": "Compute",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/compute-storage/concepts-compute",
+      "pageDate": "2026-07-08",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-storage",
+      "title": "Storage",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/compute-storage/concepts-storage",
+      "pageDate": "2026-07-08",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-pssd-v2",
+      "title": "Premium SSD v2",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/compute-storage/concepts-storage-premium-ssd-v2",
+      "pageDate": "2026-10-09",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-reliability",
+      "title": "Reliability, HA and SLA",
+      "url": "https://learn.microsoft.com/en-us/azure/reliability/reliability-database-postgresql",
+      "pageDate": "2026-09-30",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-read-replicas",
+      "title": "Read replicas",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/read-replica/concepts-read-replicas",
+      "pageDate": "2026-07-13",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-backup",
+      "title": "Backup and restore",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/backup-restore/concepts-backup-restore",
+      "pageDate": "2026-07-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-encryption",
+      "title": "Data encryption",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/security/security-data-encryption",
+      "pageDate": "2026-09-18",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-access-control",
+      "title": "Access control and privileges",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/security/security-access-control",
+      "pageDate": "2026-07-14",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-networking",
+      "title": "Private networking",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/network/concepts-networking-private",
+      "pageDate": "2026-07-13",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-extensions-considerations",
+      "title": "Extension considerations",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/extensions/concepts-extensions-considerations",
+      "pageDate": "2026-08-12",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-mvu",
+      "title": "Major version upgrade",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/configure-maintain/concepts-major-version-upgrade",
+      "pageDate": "2026-09-10",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-version-policy",
+      "title": "Version policy",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/configure-maintain/concepts-version-policy",
+      "pageDate": "2026-09-15",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-extended-support",
+      "title": "Extended support",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/configure-maintain/extended-support",
+      "pageDate": "2026-09-30",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-release-notes",
+      "title": "Release notes",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/release-notes/release-notes",
+      "pageDate": "2026-09-14",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-elastic-clusters",
+      "title": "Elastic clusters",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/elastic-clusters/concepts-elastic-clusters",
+      "pageDate": "2026-07-08",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fs-elastic-limits",
+      "title": "Elastic cluster limitations",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/elastic-clusters/concepts-elastic-clusters-limitations",
+      "pageDate": "2026-09-03",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-horizondb-overview",
+      "title": "Azure HorizonDB overview",
+      "url": "https://learn.microsoft.com/en-us/azure/horizondb/overview",
+      "pageDate": "2026-09-22",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-horizondb-release-notes",
+      "title": "Azure HorizonDB release notes",
+      "url": "https://learn.microsoft.com/en-us/azure/horizondb/release-notes/release-notes",
+      "pageDate": "2026-06-02",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-horizondb-extensions",
+      "title": "Azure HorizonDB extensions",
+      "url": "https://learn.microsoft.com/en-us/azure/horizondb/extensions/concepts-extensions-versions",
+      "pageDate": "2026-07-06",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-horizondb-compute",
+      "title": "Azure HorizonDB compute and replicas",
+      "url": "https://learn.microsoft.com/en-us/azure/horizondb/configure-maintain/concepts-compute-replicas",
+      "pageDate": "2026-07-06",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-horizondb-build-blog",
+      "title": "Azure HorizonDB public preview (Build)",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/azure-horizondb-enterprise-ready-postgres-engineered-for-the-ai-era/4524094",
+      "pageDate": "2026-06-02",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-cosmos-pg-intro",
+      "title": "Azure Cosmos DB for PostgreSQL",
+      "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/postgresql/introduction",
+      "pageDate": "2026-04-27",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-retirement-calendar",
+      "title": "Azure service retirement calendar (Advisor)",
+      "url": "https://learn.microsoft.com/en-us/azure/advisor/advisor-how-to-use-service-upgrade-retirement-recommendations",
+      "pageDate": "2026-09-14",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-arc-pg",
+      "title": "Azure Arc-enabled PostgreSQL",
+      "url": "https://learn.microsoft.com/en-us/azure/azure-arc/data/what-is-azure-arc-enabled-postgresql",
+      "pageDate": "2026-06-24",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-db-at-azure",
+      "title": "Oracle AI Database@Azure overview",
+      "url": "https://learn.microsoft.com/en-us/azure/oracle/oracle-db/database-overview",
+      "pageDate": "2026-09-15",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-db-at-azure-regions",
+      "title": "Oracle AI Database@Azure regions",
+      "url": "https://learn.microsoft.com/en-us/azure/oracle/oracle-db/oracle-database-regions",
+      "pageDate": "2026-10-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-db-at-azure-exadata",
+      "title": "Exadata on Oracle Database@Azure",
+      "url": "https://learn.microsoft.com/en-us/azure/oracle/oracle-db/exadata-manage-services",
+      "pageDate": "2026-04-15",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-vm",
+      "title": "Oracle on Azure virtual machines",
+      "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/workloads/oracle/oracle-overview",
+      "pageDate": "2026-02-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-aks-cnpg",
+      "title": "PostgreSQL HA on AKS (CloudNativePG)",
+      "url": "https://learn.microsoft.com/en-us/azure/aks/postgresql-ha-overview",
+      "pageDate": "2025-11-09",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "orafce-readme",
+      "title": "orafce",
+      "url": "https://github.com/orafce/orafce",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-vscode-oracle-migration",
+      "title": "Oracle migration in the PostgreSQL extension for VS Code",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/development/vs-code-extension/oracle-migration",
+      "pageDate": "2026-10-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-schema-conversion",
+      "title": "Schema conversion overview",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/migrate/oracle-conversions-schema/schema-conversions-overview",
+      "pageDate": "2026-10-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-schema-limitations",
+      "title": "Schema conversion limitations",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/migrate/oracle-conversions-schema/schema-conversions-limitations",
+      "pageDate": "2026-10-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-schema-tutorial",
+      "title": "Schema conversion tutorial and prerequisites",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/migrate/oracle-conversions-schema/schema-conversions-tutorial",
+      "pageDate": "2026-10-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-schema-best-practices",
+      "title": "Schema conversion best practices",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/migrate/oracle-conversions-schema/schema-conversions-best-practices",
+      "pageDate": "2026-10-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-app-conversion",
+      "title": "Application conversion overview (preview)",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/migrate/oracle-conversions-application/app-conversions-overview",
+      "pageDate": "2026-04-15",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-vscode-pgsql-changelog",
+      "title": "vscode-pgsql changelog",
+      "url": "https://github.com/microsoft/vscode-pgsql/blob/main/CHANGELOG.md",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-learn-oracle-module",
+      "title": "Learn module: Convert Oracle schemas to Azure Database for PostgreSQL",
+      "url": "https://learn.microsoft.com/en-us/training/modules/convert-oracle-schema-azure-database-postgresql-ai/",
+      "pageDate": "2026-07-17",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-schema-conversion-blog",
+      "title": "AI-assisted Oracle to PostgreSQL schema conversion in VS Code",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/ai-assisted-oracle-to-postgresql-schema-conversion-in-visual-studio-code/4542203",
+      "pageDate": "2026-08-06",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-dms-scenario-status",
+      "title": "DMS scenario status",
+      "url": "https://learn.microsoft.com/en-us/azure/dms/resource-scenario-status",
+      "pageDate": "2026-02-19",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-dms-tools-matrix",
+      "title": "DMS tools matrix",
+      "url": "https://learn.microsoft.com/en-us/azure/dms/dms-tools-matrix",
+      "pageDate": "2026-08-12",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-pg-migration-service",
+      "title": "Migration service in Azure Database for PostgreSQL",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/migrate/migration-service/overview-migration-service-postgresql",
+      "pageDate": "2026-06-24",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-ads-retirement",
+      "title": "What's happening to Azure Data Studio",
+      "url": "https://learn.microsoft.com/en-us/azure-data-studio/whats-happening-azure-data-studio",
+      "pageDate": "2026-06-09",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-ads-migration-retirement",
+      "title": "Retirement of ADS Oracle migration extensions",
+      "url": "https://www.microsoft.com/en-us/sql-server/blog/2024/09/12/modernize-your-database-with-the-consolidation-and-retirement-of-azure-database-migration-tools/",
+      "pageDate": "2024-09-12",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-ssma-oracle",
+      "title": "SSMA for Oracle",
+      "url": "https://learn.microsoft.com/en-us/sql/ssma/oracle/sql-server-migration-assistant-for-oracle-oracletosql",
+      "pageDate": "2026-04-20",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-azure-migrate-discovery",
+      "title": "Azure Migrate discovery methods",
+      "url": "https://learn.microsoft.com/en-us/azure/migrate/discovery-methods-modes?view=migrate",
+      "pageDate": "2026-09-24",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-adf-oracle",
+      "title": "Azure Data Factory Oracle connector",
+      "url": "https://learn.microsoft.com/en-us/azure/data-factory/connector-oracle",
+      "pageDate": "2026-04-09",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-adf-connector-lifecycle",
+      "title": "ADF connector release stages",
+      "url": "https://learn.microsoft.com/en-us/azure/data-factory/connector-release-stages-and-timelines",
+      "pageDate": "2026-05-12",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-copilot-migration-agent",
+      "title": "Azure Copilot migration agent",
+      "url": "https://learn.microsoft.com/en-us/azure/copilot/migration-agent",
+      "pageDate": "2026-06-22",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-oracle-pg-playbook",
+      "title": "Oracle to Azure Postgres Migration Playbook (2024)",
+      "url": "https://download.microsoft.com/download/8/f/c/8fc4fe39-7cb1-484a-aaa0-418704b90c0e/Oracle%20to%20Azure%20Postgres%20Migration%20Playbook.pdf",
+      "pageDate": "2025-04-29",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ora2pg-manual",
+      "title": "Ora2Pg manual",
+      "url": "https://raw.githubusercontent.com/darold/ora2pg/master/doc/Ora2Pg.pod",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ora2pg-plsql",
+      "title": "Ora2Pg cost tables (lib/Ora2Pg/PLSQL.pm)",
+      "url": "https://raw.githubusercontent.com/darold/ora2pg/master/lib/Ora2Pg/PLSQL.pm",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "plpgsql-check",
+      "title": "plpgsql_check",
+      "url": "https://github.com/okbob/plpgsql_check",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "oracle-lifetime-support",
+      "title": "Oracle Lifetime Support: Oracle Database technology chart",
+      "url": "https://www.oracle.com/us/support/library/lsp-tech-chart-069290.pdf",
+      "pageDate": "2026-10-02",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "oracle-cloud-licensing",
+      "title": "Oracle licensing for authorized cloud environments",
+      "url": "https://www.oracle.com/us/corporate/pricing/cloud-licensing-070579.pdf",
+      "pageDate": "2026-09-04",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "oracle-support-policy-changes",
+      "title": "Oracle software technical support policies: statement of changes",
+      "url": "https://www.oracle.com/contracts/docs/software_technical_support_policies_soc.pdf",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-azure-pricing-pg",
+      "title": "Azure Database for PostgreSQL flexible server pricing",
+      "url": "https://azure.microsoft.com/en-us/pricing/details/postgresql/flexible-server/",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-reserved-pricing-pg",
+      "title": "Reserved capacity for Azure Database for PostgreSQL",
+      "url": "https://learn.microsoft.com/en-us/azure/postgresql/configure-maintain/concepts-reserved-pricing",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-hybrid-benefit",
+      "title": "Azure Hybrid Benefit",
+      "url": "https://learn.microsoft.com/en-us/azure/cost-management-billing/azure-hybrid-benefits/",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-sla",
+      "title": "Service Level Agreements for Online Services",
+      "url": "https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services?lang=1",
+      "pageDate": "2026-10-01",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-azure-accelerate",
+      "title": "Azure Accelerate",
+      "url": "https://azure.microsoft.com/en-us/solutions/azure-accelerate/",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-azure-accelerate-databases",
+      "title": "Azure Accelerate for Databases",
+      "url": "https://azure.microsoft.com/solutions/azure-accelerate/databases",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-partner-center-2026-05",
+      "title": "Partner Center announcements, May 2026",
+      "url": "https://learn.microsoft.com/en-us/partner-center/announcements/2026-may",
+      "pageDate": "2026-05",
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-cloud-accelerate-factory",
+      "title": "Cloud Accelerate Factory",
+      "url": "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/final/en-us/microsoft-brand/documents/cloud-accelerate-factory-information-1029314.pdf",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "ms-fasttrack-faq",
+      "title": "FastTrack for Azure FAQ",
+      "url": "https://www.microsoft.com/en-us/fasttrack/faqs",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "kloba-lab",
+      "title": "Contoso Store Oracle to PostgreSQL migration lab",
+      "url": "https://github.com/kloba/oracle-to-postgres-migration-lab",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    },
+    {
+      "id": "fredgis-advisor",
+      "title": "fredgis/sql-migration-advisor (design this repository follows)",
+      "url": "https://github.com/fredgis/sql-migration-advisor",
+      "pageDate": null,
+      "checked": "2026-10-12"
+    }
+  ]
+}

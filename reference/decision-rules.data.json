@@ -1,0 +1,673 @@
+{
+  "schema": "oracle-to-postgres-migration-advisor.decision-rules-data/v1",
+  "version": "v1.0",
+  "source": {
+    "markdown": "reference/decision-rules.md",
+    "description": "Machine-checkable constants and gates extracted from decision-rules.md. The test mirror reads this file so it cannot drift from the rules on a value.",
+    "sources": "reference/sources.json"
+  },
+  "lastVerified": "2026-10-12",
+  "targets": {
+    "pg_flex": {
+      "label": "Azure Database for PostgreSQL flexible server",
+      "family": "postgres-paas",
+      "status": "GA"
+    },
+    "pg_elastic": {
+      "label": "Flexible server elastic cluster",
+      "family": "postgres-paas",
+      "status": "GA"
+    },
+    "horizondb": {
+      "label": "Azure HorizonDB for PostgreSQL",
+      "family": "postgres-paas",
+      "status": "Public Preview"
+    },
+    "pg_vm": {
+      "label": "PostgreSQL on Azure virtual machines (self-managed)",
+      "family": "postgres-iaas",
+      "status": "Customer operated"
+    },
+    "pg_aks": {
+      "label": "PostgreSQL on AKS (CloudNativePG)",
+      "family": "postgres-iaas",
+      "status": "Customer operated"
+    },
+    "cosmos_pg": {
+      "label": "Azure Cosmos DB for PostgreSQL",
+      "family": "postgres-paas",
+      "status": "New deployments blocked"
+    },
+    "oracle_dbaz": {
+      "label": "Oracle AI Database@Azure",
+      "family": "oracle",
+      "status": "GA"
+    },
+    "oracle_vm": {
+      "label": "Oracle Database on Azure virtual machines",
+      "family": "oracle",
+      "status": "Customer operated"
+    }
+  },
+  "flexibleServer": {
+    "supportedMajors": {
+      "recommended": [
+        16,
+        17,
+        18
+      ],
+      "acceptable": [
+        15
+      ],
+      "avoid": [
+        14
+      ],
+      "paidExtendedSupport": [
+        11,
+        12,
+        13
+      ]
+    },
+    "standardSupportEnds": {
+      "14": "2026-12-11",
+      "15": "2027-11-11",
+      "16": "2028-11-09",
+      "17": "2029-11-08",
+      "18": "2030-11-14"
+    },
+    "storageTiB": {
+      "premiumSsd": 32,
+      "premiumSsdV2": 64
+    },
+    "plannedFillRatio": 0.8,
+    "maxIops": {
+      "premiumSsd": 20000,
+      "premiumSsdV2": 80000
+    },
+    "maxMibPerSecond": {
+      "premiumSsd": 900,
+      "premiumSsdV2": 1200
+    },
+    "vcores": {
+      "generallyAvailableMax": 96,
+      "v6PreviewMax": 192
+    },
+    "ramGiB": {
+      "generallyAvailableMax": 672,
+      "v6PreviewMax": 1832
+    },
+    "sla": {
+      "zoneRedundantHa": 99.99,
+      "sameZoneHa": 99.95,
+      "noHa": 99.9
+    },
+    "readReplicas": {
+      "direct": 5,
+      "cascadingTotal": 30
+    },
+    "backup": {
+      "pitrDaysMin": 7,
+      "pitrDaysMax": 35,
+      "longTermRetentionYears": 10,
+      "longTermRetentionMaxDbTiB": 1
+    },
+    "maxConnectionsDefaultFrom16Vcores": 5000,
+    "pssdV2Limits": [
+      "no storage autogrow",
+      "no long-term retention backups",
+      "no on-demand backups",
+      "not on PostgreSQL 13",
+      "not on Burstable"
+    ],
+    "zoneRedundantHa": {
+      "volatile": true,
+      "blockedForNewDeployments": [
+        "brazilsouth",
+        "centralindia",
+        "eastasia",
+        "eastus",
+        "eastus2",
+        "germanywestcentral",
+        "mexicocentral",
+        "northeurope",
+        "qatarcentral",
+        "southcentralus",
+        "southeastasia",
+        "westeurope",
+        "westus2"
+      ],
+      "unavailable": [
+        "westus",
+        "northcentralus",
+        "ukwest",
+        "canadaeast",
+        "japanwest",
+        "australiasoutheast",
+        "koreasouth",
+        "norwaywest",
+        "switzerlandwest",
+        "uaecentral"
+      ],
+      "note": "Re-check in the portal before promising a region. Microsoft's own overview and roundup pages disagree on Japan West.",
+      "sources": [
+        "ms-fs-overview"
+      ]
+    },
+    "oracleCompatExtensions": {
+      "oracle_fdw": {
+        "version": "1.2",
+        "pg": "12-18",
+        "sources": [
+          "ms-fs-extensions-versions",
+          "ms-fs-release-notes"
+        ]
+      },
+      "orafce": {
+        "version": "4.16",
+        "pg": "14-18",
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "pg_hint_plan": {
+        "preload": true,
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "plpgsql_check": {
+        "version": "2.8",
+        "pg": "14-18",
+        "preload": true,
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "pg_partman": {
+        "version": "5.4.3",
+        "pg": "16-18",
+        "preload": true,
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "pg_cron": {
+        "version": "1.6",
+        "preload": true,
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "pgaudit": {
+        "preload": true,
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "dblink": {
+        "version": "1.2",
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "postgres_fdw": {
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "azure_storage": {
+        "version": "1.9",
+        "preload": true,
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "session_variable": {
+        "version": "3.4",
+        "blocksInPlaceMajorUpgrade": true,
+        "sources": [
+          "ms-fs-extensions-versions",
+          "ms-fs-mvu"
+        ]
+      },
+      "login_hook": {
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "temporal_tables": {
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "pg_ivm": {
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "pglogical": {
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "tds_fdw": {
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      }
+    },
+    "absentFromAllowList": [
+      "plperl",
+      "plpythonu",
+      "plpython3u",
+      "pltcl",
+      "file_fdw",
+      "mysql_fdw",
+      "http",
+      "pgtap",
+      "pg_background"
+    ],
+    "noSuperuser": true,
+    "noTablespaces": true,
+    "sources": [
+      "ms-fs-limits",
+      "ms-fs-compute",
+      "ms-fs-storage",
+      "ms-fs-pssd-v2",
+      "ms-fs-reliability",
+      "ms-fs-supported-versions",
+      "ms-fs-version-policy"
+    ],
+    "otherAllowListedExtensions": {
+      "names": [
+        "hstore",
+        "tablefunc",
+        "pgcrypto",
+        "uuid-ossp",
+        "pg_trgm",
+        "citext",
+        "ltree",
+        "fuzzystrmatch",
+        "unaccent",
+        "postgis",
+        "postgis_topology",
+        "pg_stat_statements",
+        "btree_gin",
+        "btree_gist",
+        "pg_repack",
+        "pg_squeeze"
+      ],
+      "note": "Standard extensions listed on the Azure by-engine extension page. Versions vary by PostgreSQL major; check the page for the major in use.",
+      "sources": [
+        "ms-fs-extensions-versions"
+      ]
+    }
+  },
+  "horizonDb": {
+    "status": "Public Preview since 2026-06-02",
+    "regions": [
+      "canadacentral",
+      "centralus",
+      "eastus",
+      "westus2",
+      "westus3",
+      "germanywestcentral",
+      "swedencentral",
+      "australiaeast",
+      "koreacentral"
+    ],
+    "maxStorageTB": 128,
+    "maxVcoresPerReplica": 192,
+    "maxReplicas": 15,
+    "postgresMajors": [
+      17
+    ],
+    "notSupportedInPreview": [
+      "customer-managed keys",
+      "cross-region read replicas",
+      "long-term retention",
+      "VNet injection",
+      "built-in PgBouncer",
+      "configurable maintenance window",
+      "oracle_fdw",
+      "pg_hint_plan",
+      "plpgsql_check"
+    ],
+    "backupRetentionDaysFixed": 7,
+    "publishedSla": null,
+    "conversionToolScratchDatabase": false,
+    "sources": [
+      "ms-horizondb-overview",
+      "ms-horizondb-extensions",
+      "ms-horizondb-compute",
+      "ms-horizondb-build-blog",
+      "ms-oracle-schema-tutorial"
+    ]
+  },
+  "elasticClusters": {
+    "status": "GA since 2025-11",
+    "maxNodesSelfService": 20,
+    "postgresMajors": [
+      17,
+      18
+    ],
+    "limits": [
+      "one database per cluster",
+      "no in-place major version upgrade",
+      "a single read replica",
+      "private endpoints only",
+      "no storage autogrow"
+    ],
+    "needsDistributionKey": true,
+    "sources": [
+      "ms-fs-elastic-clusters",
+      "ms-fs-elastic-limits"
+    ]
+  },
+  "cosmosPostgres": {
+    "newDeploymentsBlocked": true,
+    "retires": "2029-03-31",
+    "replacement": "pg_elastic",
+    "sources": [
+      "ms-cosmos-pg-intro",
+      "ms-retirement-calendar"
+    ]
+  },
+  "oracleStay": {
+    "dbAtAzureRegions": [
+      "australiaeast",
+      "australiasoutheast",
+      "centralindia",
+      "japaneast",
+      "japanwest",
+      "southindia",
+      "southeastasia",
+      "brazilsouth",
+      "brazilsoutheast",
+      "francecentral",
+      "francesouth",
+      "germanynorth",
+      "germanywestcentral",
+      "italynorth",
+      "northeurope",
+      "spaincentral",
+      "swedencentral",
+      "switzerlandnorth",
+      "uaecentral",
+      "uaenorth",
+      "uksouth",
+      "ukwest",
+      "westeurope",
+      "canadacentral",
+      "canadaeast",
+      "centralus",
+      "eastus",
+      "eastus2",
+      "northcentralus",
+      "southcentralus",
+      "westus",
+      "westus2",
+      "westus3"
+    ],
+    "dbAtAzureRequiresOciTenancy": true,
+    "dbAtAzureCountsTowardMacc": true,
+    "exadataShapeNote": "Microsoft's Exadata page says X9M only; its ms.date is 2024. Confirm the shape with Oracle before ruling a shape in or out.",
+    "oracleVm": {
+      "byol": true,
+      "customerOwnsHaDr": true,
+      "twoVcpuPerProcessorLicense": true
+    },
+    "sources": [
+      "ms-oracle-db-at-azure",
+      "ms-oracle-db-at-azure-regions",
+      "ms-oracle-db-at-azure-exadata",
+      "ms-oracle-vm",
+      "oracle-cloud-licensing"
+    ]
+  },
+  "converter": {
+    "name": "AI-assisted schema conversion in the PostgreSQL extension for VS Code (ms-ossdata.vscode-pgsql)",
+    "schemaConversionStatus": "GA since 1.23.0 (2026-05-26)",
+    "applicationConversionStatus": "Preview",
+    "oracleVersionsListed": [
+      "ORA_12C",
+      "ORA_18C",
+      "ORA_19C",
+      "ORA_21C"
+    ],
+    "oracleVersionsNotListed": [
+      "ORA_11G_OR_OLDER",
+      "ORA_23AI_26AI"
+    ],
+    "movesRowData": false,
+    "requires": {
+      "foundryModel": "gpt-5.2",
+      "foundryTokensPerMinute": 1000000,
+      "githubCopilot": "Pro+, Business or Enterprise",
+      "scratchDatabase": "Azure Database for PostgreSQL flexible server, PostgreSQL 15 or later; HorizonDB is not accepted"
+    },
+    "notConverted": [
+      "Java in the database",
+      "external C libraries",
+      "wrapped PL/SQL",
+      "bitmap and global-partitioned and domain indexes",
+      "materialized view logs",
+      "external tables",
+      "Advanced Queuing",
+      "clusters",
+      "DIRECTORY objects",
+      "database links",
+      "application contexts",
+      "VPD / DBMS_RLS",
+      "DBMS_SCHEDULER and DBMS_JOB objects",
+      "users, roles and privileges",
+      "system-event triggers"
+    ],
+    "sources": [
+      "ms-oracle-schema-conversion",
+      "ms-oracle-schema-limitations",
+      "ms-oracle-schema-tutorial",
+      "ms-vscode-pgsql-changelog"
+    ]
+  },
+  "dataMovement": {
+    "microsoftFirstPartyOracleToPostgresService": false,
+    "dmsOracleToPostgres": false,
+    "pgMigrationServiceAcceptsOracle": false,
+    "offlinePaths": {
+      "ORACLE_FDW_COPY": {
+        "role": "transport",
+        "needsNetworkPath": true,
+        "sources": [
+          "ms-fs-extensions-versions"
+        ]
+      },
+      "ADF_COPY": {
+        "role": "transport",
+        "connectorVersion": "2.0",
+        "sources": [
+          "ms-adf-oracle",
+          "ms-adf-connector-lifecycle"
+        ]
+      }
+    },
+    "sources": [
+      "ms-dms-scenario-status",
+      "ms-pg-migration-service",
+      "ms-dms-tools-matrix"
+    ],
+    "onlineCapture": {
+      "microsoftService": false,
+      "scopeRule": "OP-SCOPE",
+      "needs": [
+        "ARCHIVELOG mode",
+        "supplemental logging",
+        "a network path from the capture tool to Oracle and to Azure",
+        "a primary key or unique key on every table to be replicated"
+      ],
+      "sources": [
+        "ms-dms-scenario-status",
+        "ms-pg-migration-service",
+        "ms-dms-tools-matrix"
+      ]
+    }
+  },
+  "retired": [
+    {
+      "item": "Azure Data Studio and all its extensions",
+      "date": "2026-02-28",
+      "use": "the PostgreSQL extension for VS Code",
+      "sources": [
+        "ms-ads-retirement"
+      ]
+    },
+    {
+      "item": "Azure Data Studio Oracle assessment (DMAO) and schema conversion toolkit (DSCT)",
+      "date": "2024-12-15",
+      "use": "the VS Code conversion tool",
+      "sources": [
+        "ms-ads-migration-retirement"
+      ]
+    },
+    {
+      "item": "Azure Database for PostgreSQL Single Server",
+      "date": "2025-03-28",
+      "use": "flexible server",
+      "sources": [
+        "ms-retirement-calendar"
+      ]
+    },
+    {
+      "item": "Azure Arc-enabled PostgreSQL",
+      "date": "2025-07",
+      "use": "flexible server",
+      "sources": [
+        "ms-arc-pg"
+      ]
+    },
+    {
+      "item": "Azure Cosmos DB for PostgreSQL, for new deployments",
+      "date": "blocked now, retires 2029-03-31",
+      "use": "flexible server elastic clusters",
+      "sources": [
+        "ms-cosmos-pg-intro",
+        "ms-retirement-calendar"
+      ]
+    },
+    {
+      "item": "Azure Database Migration Service for Oracle to PostgreSQL",
+      "date": "never existed",
+      "use": "none: no Microsoft migration service moves Oracle rows to PostgreSQL. The offline routes are the Data Factory copy and oracle_fdw",
+      "sources": [
+        "ms-dms-scenario-status"
+      ]
+    },
+    {
+      "item": "SSMA for Oracle as a route to PostgreSQL",
+      "date": "not applicable",
+      "use": "SSMA targets SQL Server and Azure SQL only",
+      "sources": [
+        "ms-ssma-oracle"
+      ]
+    },
+    {
+      "item": "Azure Migrate as an Oracle database assessor",
+      "date": "not supported",
+      "use": "the VS Code discovery step, the schema scan",
+      "sources": [
+        "ms-azure-migrate-discovery"
+      ]
+    },
+    {
+      "item": "Azure Data Factory Oracle connector v1.0",
+      "date": "2026-03-31",
+      "use": "Oracle connector v2.0",
+      "sources": [
+        "ms-adf-connector-lifecycle"
+      ]
+    },
+    {
+      "item": "PostgreSQL 11, 12 and 13 as a new target",
+      "date": "standard support ended 2026-07-31",
+      "use": "PostgreSQL 16 to 18",
+      "sources": [
+        "ms-fs-version-policy",
+        "ms-fs-extended-support"
+      ]
+    },
+    {
+      "item": "PostgreSQL 14 as a new target",
+      "date": "standard support ends 2026-12-11",
+      "use": "PostgreSQL 16 to 18",
+      "sources": [
+        "ms-fs-version-policy"
+      ]
+    }
+  ],
+  "lifecycle": {
+    "ORA_11G_OR_OLDER": {
+      "state": "sustaining only",
+      "migrationDriver": true
+    },
+    "ORA_12C": {
+      "state": "sustaining only",
+      "migrationDriver": true
+    },
+    "ORA_18C": {
+      "state": "sustaining only",
+      "migrationDriver": true
+    },
+    "ORA_19C": {
+      "state": "supported",
+      "premierEnds": "2029-12",
+      "extendedEnds": "2032-12",
+      "migrationDriver": false
+    },
+    "ORA_21C": {
+      "state": "supported",
+      "premierEnds": "2027-07",
+      "migrationDriver": true
+    },
+    "ORA_23AI_26AI": {
+      "state": "supported",
+      "migrationDriver": false,
+      "note": "23ai was renamed 26ai. Whether 23ai moves to 26ai by release update is unverified."
+    },
+    "sources": [
+      "oracle-lifetime-support",
+      "oracle-support-policy-changes"
+    ]
+  },
+  "costLevers": {
+    "azureHybridBenefitAppliesToPostgres": false,
+    "reservedCapacityComputeOnly": true,
+    "reservedCapacityPercentMaximaDisagree": true,
+    "haDoublesCost": true,
+    "burstableNotForProduction": true,
+    "sources": [
+      "ms-azure-pricing-pg",
+      "ms-reserved-pricing-pg",
+      "ms-hybrid-benefit"
+    ]
+  },
+  "sizeClasses": {
+    "UNDER_1_TB": 1,
+    "FROM_1_TO_8_TB": 8,
+    "FROM_8_TO_32_TB": 32,
+    "FROM_32_TO_64_TB": 64,
+    "FROM_64_TO_128_TB": 128,
+    "OVER_128_TB": 1000
+  },
+  "plsqlVolumeLinesOfCode": {
+    "NONE_OR_LIGHT": 5000,
+    "MODERATE": 50000,
+    "HEAVY": 250000
+  },
+  "confidence": {
+    "ceiling": "medium",
+    "recommendationStatus": [
+      "provisional",
+      "shortlist"
+    ]
+  }
+}

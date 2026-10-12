@@ -1,0 +1,1017 @@
+{
+  "schema": "oracle-to-postgres-migration-advisor.feature-matrix/v1",
+  "description": "How each PostgreSQL target carries each Oracle feature. native, workaround, redesign, unsupported, unknown. Oracle targets carry every feature and are not listed.",
+  "states": {
+    "native": "The target carries it with the same behaviour.",
+    "workaround": "Carried through an extension or a pattern, with caveats a person checks.",
+    "redesign": "No equivalent. The application or the data model changes.",
+    "unsupported": "The target cannot carry it at all, even with a redesign.",
+    "unknown": "The vendor documentation does not say. Never read as native."
+  },
+  "targets": [
+    "pg_flex",
+    "pg_elastic",
+    "horizondb",
+    "pg_vm",
+    "pg_aks"
+  ],
+  "features": [
+    {
+      "featureId": "RAC_WRITE_SCALE",
+      "label": "RAC used to scale writes across nodes",
+      "scanConstructs": [],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "One writer. Scale up inside the ceilings; reads scale out through replicas",
+          "sources": []
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "Writes scale by sharding on a distribution key, which changes the data model",
+          "sources": [
+            "ms-fs-elastic-limits"
+          ]
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "One writer, up to 192 vCores per replica; shared-storage read replicas",
+          "sources": [
+            "ms-horizondb-compute"
+          ]
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "One writer. Scale up the VM",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "One writer. Scale up the node",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "RAC_HA_ONLY",
+      "label": "RAC used only for availability",
+      "scanConstructs": [],
+      "targets": {
+        "pg_flex": {
+          "state": "native",
+          "note": "Zone-redundant HA, 99.99% SLA, typically 60 to 120 seconds to fail over",
+          "sources": [
+            "ms-fs-reliability"
+          ]
+        },
+        "pg_elastic": {
+          "state": "native",
+          "note": "Per-node HA",
+          "sources": [
+            "ms-fs-elastic-limits"
+          ]
+        },
+        "horizondb": {
+          "state": "native",
+          "note": "Zone-redundant replicas. No published SLA",
+          "sources": [
+            "ms-horizondb-overview"
+          ]
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "The operator builds and tests HA",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "native",
+          "note": "CloudNativePG runs one primary and two replicas across zones",
+          "sources": [
+            "ms-aks-cnpg"
+          ]
+        }
+      }
+    },
+    {
+      "featureId": "ADVANCED_QUEUING",
+      "label": "Advanced Queuing (DBMS_AQ)",
+      "scanConstructs": [
+        "PKG-DBMS-AQ"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "Azure Service Bus, or a queue table read with SKIP LOCKED. Producers and consumers change",
+          "sources": [
+            "ms-oracle-schema-limitations"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "A queue extension such as pgmq. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "A queue extension such as pgmq. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "JAVA_IN_DATABASE",
+      "label": "Java stored procedures",
+      "scanConstructs": [
+        "PKG-JAVA"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "There is no in-database Java runtime. The logic moves to the application tier",
+          "sources": [
+            "ms-oracle-schema-limitations"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "PL/Java. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "PL/Java in a custom image. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "EXTERNAL_PROCEDURES_C",
+      "label": "External procedures (C libraries)",
+      "scanConstructs": [
+        "PKG-EXTPROC"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "Untrusted C code is not allowed on a managed service",
+          "sources": [
+            "ms-fs-access-control"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "A C extension. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "A C extension in a custom image. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "NETWORK_FROM_DATABASE",
+      "label": "UTL_HTTP, UTL_SMTP, UTL_TCP, UTL_MAIL",
+      "scanConstructs": [
+        "PKG-UTL-NETWORK"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "The http extension and the untrusted languages are absent from the allow-list. Azure Functions, Logic Apps or the application tier",
+          "sources": [
+            "ms-fs-extensions-versions"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "The extension list has no http or untrusted language",
+          "sources": [
+            "ms-horizondb-extensions"
+          ]
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "The http extension or plpython3u. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "The http extension or plpython3u. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "FILE_ACCESS_FROM_DATABASE",
+      "label": "UTL_FILE and DIRECTORY objects",
+      "scanConstructs": [
+        "PKG-UTL-FILE"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "azure_storage reads and writes blobs. There is no server file system to write to",
+          "sources": [
+            "ms-fs-extensions-versions"
+          ]
+        },
+        "pg_elastic": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "azure_storage 1.9 is present",
+          "sources": [
+            "ms-horizondb-extensions"
+          ]
+        },
+        "pg_vm": {
+          "state": "native",
+          "note": "orafce UTL_FILE, or server-side file access, on a disk the operator owns",
+          "sources": [
+            "orafce-readme"
+          ]
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "A mounted volume or object storage",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "SPATIAL_BASIC",
+      "label": "Oracle Spatial: geometry types and operators",
+      "scanConstructs": [
+        "PKG-SPATIAL"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "PostGIS. Geometry maps. Spatial operators and index hints do not",
+          "sources": [
+            "ms-fs-extensions-versions"
+          ]
+        },
+        "pg_elastic": {
+          "state": "workaround",
+          "note": "PostGIS on an elastic cluster is not confirmed",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "PostGIS 3.5.2 is present",
+          "sources": [
+            "ms-horizondb-extensions"
+          ]
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "PostGIS",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "PostGIS",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "SPATIAL_ADVANCED",
+      "label": "Oracle Spatial: network, topology, georaster",
+      "scanConstructs": [
+        "PKG-SPATIAL-ADVANCED"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "pgRouting and postgis_topology exist but do not reproduce the Oracle network and topology data models",
+          "sources": [
+            "ms-fs-mvu"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "The same data-model gap on a self-managed server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "The same data-model gap",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "ORACLE_TEXT",
+      "label": "Oracle Text (CONTAINS, CTX_)",
+      "scanConstructs": [
+        "PKG-CTX"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "tsvector full-text search and pg_trgm. Ranking and stemming differ, so results differ",
+          "sources": [
+            "ms-fs-extensions-versions"
+          ]
+        },
+        "pg_elastic": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "tsvector and pg_trgm",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "tsvector and pg_trgm",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "XML_SCHEMA_BASED",
+      "label": "XML DB, registered schemas, XMLType repository",
+      "scanConstructs": [
+        "TYPE-XMLTYPE-SCHEMA"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "XQuery and schema-based XML are not supported. Validate in the application tier",
+          "sources": [
+            "ms-oracle-schema-limitations"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "MULTIMEDIA",
+      "label": "Oracle Multimedia (ORDSYS)",
+      "scanConstructs": [
+        "PKG-ORDSYS"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "Store media in Blob Storage and metadata in tables",
+          "sources": []
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "VPD",
+      "label": "Virtual Private Database (DBMS_RLS)",
+      "scanConstructs": [
+        "SEC-VPD",
+        "SEC-VPD-CALL"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "Row level security with CREATE POLICY. Policy functions become USING expressions",
+          "sources": [
+            "ms-oracle-schema-limitations"
+          ]
+        },
+        "pg_elastic": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "Row level security",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "Row level security",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "LABEL_OR_VAULT",
+      "label": "Label Security, Database Vault, Data Redaction",
+      "scanConstructs": [
+        "SEC-VAULT-OLS"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "No equivalent. Row level security, views and roles replace the design",
+          "sources": []
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "FLASHBACK_USE",
+      "label": "Flashback query, versions, table",
+      "scanConstructs": [
+        "SQL-FLASHBACK-QUERY"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "No AS OF. Point-in-time restore creates a new server. temporal_tables is on the allow-list for row history",
+          "sources": [
+            "ms-fs-extensions-versions",
+            "ms-oracle-schema-limitations"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "EDITION_BASED_REDEFINITION",
+      "label": "Edition-based redefinition",
+      "scanConstructs": [
+        "PKG-EBR"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "Blue/green deployment and expand-contract migrations",
+          "sources": [
+            "ms-oracle-schema-limitations"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "DB_LINKS_TO_ORACLE",
+      "label": "Database links whose far end stays on Oracle",
+      "scanConstructs": [
+        "DDL-DB-LINK",
+        "DDL-DB-LINK-OBJECT"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "oracle_fdw 1.2 is on the allow-list. A foreign table is not a database link: no distributed transactions, different pushdown",
+          "sources": [
+            "ms-fs-extensions-versions",
+            "ms-fs-release-notes"
+          ]
+        },
+        "pg_elastic": {
+          "state": "unknown",
+          "note": "oracle_fdw on an elastic cluster is not confirmed",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "oracle_fdw is absent from the HorizonDB extension list",
+          "sources": [
+            "ms-horizondb-extensions"
+          ]
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "oracle_fdw. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "oracle_fdw in a custom image. The operator can install any extension and any procedural language. They also own the risk",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "EXTERNAL_TABLES",
+      "label": "External tables (ORGANIZATION EXTERNAL)",
+      "scanConstructs": [
+        "DDL-EXTERNAL-TABLE"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "azure_storage foreign reads. file_fdw is not on the allow-list",
+          "sources": [
+            "ms-fs-extensions-versions"
+          ]
+        },
+        "pg_elastic": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "azure_storage is present",
+          "sources": [
+            "ms-horizondb-extensions"
+          ]
+        },
+        "pg_vm": {
+          "state": "native",
+          "note": "file_fdw against a disk the operator owns",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "A mounted volume or object storage",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "SCHEDULER_ADVANCED",
+      "label": "DBMS_SCHEDULER chains, windows, job classes, event-based jobs",
+      "scanConstructs": [
+        "PKG-DBMS-SCHEDULER"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "pg_cron runs a schedule and nothing more. Chains and events move to Azure Automation, Logic Apps or Functions",
+          "sources": [
+            "ms-fs-extensions-versions"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "pg_cron or pgAgent, plus an external orchestrator for chains",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "A Kubernetes CronJob plus an orchestrator",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "WEB_FROM_DATABASE",
+      "label": "PL/SQL web toolkit and APEX",
+      "scanConstructs": [
+        "PKG-HTP-APEX"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "These render pages from the database. The page tier is rebuilt",
+          "sources": []
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "AUTONOMOUS_TRANSACTIONS",
+      "label": "PRAGMA AUTONOMOUS_TRANSACTION",
+      "scanConstructs": [
+        "PLSQL-AUTONOMOUS-TXN"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "dblink self-connection, or move the write outside the transaction. The converter emits the dblink form",
+          "sources": [
+            "ms-fs-extensions-versions",
+            "ms-oracle-schema-conversion"
+          ]
+        },
+        "pg_elastic": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "dblink 1.2 is present",
+          "sources": [
+            "ms-horizondb-extensions"
+          ]
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "dblink",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "dblink",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "PACKAGE_STATE",
+      "label": "Package-level variables that live for the session",
+      "scanConstructs": [
+        "PLSQL-PACKAGE-STATE"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "Session settings (set_config), or session_variable, which blocks in-place major version upgrade",
+          "sources": [
+            "ms-fs-extensions-versions",
+            "ms-fs-mvu"
+          ]
+        },
+        "pg_elastic": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "Session settings. session_variable is absent",
+          "sources": [
+            "ms-horizondb-extensions"
+          ]
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "Session settings, or session_variable",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "Session settings",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "OBJECT_TYPE_INHERITANCE",
+      "label": "Object types with UNDER and member methods",
+      "scanConstructs": [
+        "PLSQL-OBJECT-INHERITANCE",
+        "PLSQL-OBJECT-TYPE"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "Composite types carry no methods and no substitutability. Flatten with a discriminator",
+          "sources": [
+            "ms-oracle-schema-conversion"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "MV_FAST_REFRESH",
+      "label": "Fast-refresh or ON COMMIT materialized views",
+      "scanConstructs": [
+        "DDL-MV-FAST-REFRESH"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "Core PostgreSQL refreshes completely. pg_ivm is on the allow-list and may cover simple views; test each",
+          "sources": [
+            "ms-fs-extensions-versions"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "pg_ivm, or complete refresh on a schedule",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "pg_ivm, or complete refresh on a schedule",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "HEAVY_PARTITIONING",
+      "label": "Interval, reference, composite or global-index partitioning",
+      "scanConstructs": [
+        "DDL-PARTITION-INTERVAL",
+        "DDL-SUBPARTITION",
+        "DDL-PARTITION-REFERENCE",
+        "DDL-GLOBAL-INDEX"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "Declarative partitioning with pg_partman for interval. Reference partitioning and global indexes have no equivalent, so the key is redesigned",
+          "sources": [
+            "ms-fs-extensions-versions"
+          ]
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "Partitioning and distribution interact. Redesign the key",
+          "sources": [
+            "ms-fs-elastic-limits"
+          ]
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "pg_partman is present",
+          "sources": [
+            "ms-horizondb-extensions"
+          ]
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "Declarative partitioning with pg_partman",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "Declarative partitioning with pg_partman",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "COLUMN_ENCRYPTION",
+      "label": "Oracle TDE column encryption",
+      "scanConstructs": [
+        "SEC-ENCRYPT-COLUMN"
+      ],
+      "targets": {
+        "pg_flex": {
+          "state": "workaround",
+          "note": "pgcrypto or application-level encryption. Storage is encrypted by the service. Legacy algorithms are removed by default",
+          "sources": [
+            "ms-fs-encryption",
+            "ms-fs-extensions-considerations"
+          ]
+        },
+        "pg_elastic": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "workaround",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "workaround",
+          "note": "pgcrypto or a TDE-capable distribution",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "workaround",
+          "note": "pgcrypto",
+          "sources": []
+        }
+      }
+    },
+    {
+      "featureId": "EXADATA_OFFLOAD",
+      "label": "Workload relies on Smart Scan, storage indexes or Hybrid Columnar Compression",
+      "scanConstructs": [],
+      "targets": {
+        "pg_flex": {
+          "state": "redesign",
+          "note": "No storage offload. Queries need indexes, partitioning and tuning. Measure before committing",
+          "sources": []
+        },
+        "pg_elastic": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "horizondb": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_vm": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        },
+        "pg_aks": {
+          "state": "redesign",
+          "note": "As flexible server",
+          "sources": []
+        }
+      }
+    }
+  ]
+}

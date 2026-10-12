@@ -1,0 +1,10 @@
+node_modules/
+.cache/
+.DS_Store
+*.log
+# Scan output is large and reproducible: examples/contoso-store/run.sh rebuilds it.
+examples/*/output/assessment.json
+examples/*/output/calibration.json
+examples/*/output/recall.json
+out/
+examples/*/output/*.html

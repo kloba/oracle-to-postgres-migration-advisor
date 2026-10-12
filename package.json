@@ -1,0 +1,19 @@
+{
+  "name": "oracle-to-postgres-migration-advisor",
+  "version": "1.0.0",
+  "description": "Interview-driven Oracle to Azure PostgreSQL migration assessment with a static schema assessor and a PDF report.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node tests/run-tests.mjs",
+    "catalog": "node tools/catalog/build.mjs",
+    "catalog:check": "node tools/catalog/build.mjs --check",
+    "schemas": "node tools/schema/build-schemas.mjs",
+    "kb": "node tools/kb/build-kb.mjs",
+    "kb:check": "node tools/kb/build-kb.mjs --check",
+    "example:contoso": "examples/contoso-store/run.sh",
+    "check:sources": "node tools/check-sources.mjs"
+  }
+}

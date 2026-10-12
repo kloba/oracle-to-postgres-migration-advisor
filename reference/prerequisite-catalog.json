@@ -1,0 +1,634 @@
+{
+  "schema": 1,
+  "version": "v1.0",
+  "description": "Prerequisites and preparation steps for an Oracle to Azure PostgreSQL migration, selected by the advisor's output and, where available, by the schema scan. One catalogue feeds the prerequisite plan and the report, so the two cannot disagree. A step with no source says so in `basis`.",
+  "phases": [
+    {
+      "id": "decide",
+      "title": "Before committing to a path",
+      "note": "Cheap, mostly paperwork. Each answer can change the recommendation."
+    },
+    {
+      "id": "prepare",
+      "title": "Before the first conversion run",
+      "note": "Long lead times live here: quota, seats, networking, extensions."
+    },
+    {
+      "id": "rehearse",
+      "title": "Before the cutover rehearsal",
+      "note": "Prove the load, the validation and the rollback on real volume."
+    },
+    {
+      "id": "cutover",
+      "title": "At cutover",
+      "note": "The window, the handoff point and the way back."
+    },
+    {
+      "id": "after",
+      "title": "After the move",
+      "note": "Operate the target as PostgreSQL, not as Oracle."
+    }
+  ],
+  "items": [
+    {
+      "id": "DECIDE-DDL-EXPORT",
+      "phase": "decide",
+      "area": "Oracle",
+      "owner": "Oracle DBA",
+      "title": "Export the DDL and PL/SQL source for every schema in scope",
+      "detail": "The schema scan reads source text and needs no database connection. Use SQLcl DDL output or DBMS_METADATA.GET_DDL, one file per object type, with grants and synonyms.",
+      "when": {
+        "always": true
+      },
+      "basis": "judgement: the scan accepts any script that holds the DDL, so the export tool is the customer's choice"
+    },
+    {
+      "id": "DECIDE-AWR",
+      "phase": "decide",
+      "area": "Oracle",
+      "owner": "Oracle DBA",
+      "title": "Collect a representative month of AWR or ASH data",
+      "detail": "Compute, IOPS, throughput and connection counts come from here. This advisor does not size a target, and no Microsoft converter does either.",
+      "when": {
+        "always": true
+      },
+      "basis": "judgement: sizing is outside the advisor by design"
+    },
+    {
+      "id": "GAP-ONLINE-CAPTURE",
+      "phase": "decide",
+      "area": "Data movement",
+      "owner": "Architect",
+      "title": "Decide how to meet the downtime target: Microsoft has no change-capture service",
+      "detail": "Microsoft offers no change data capture from Oracle to PostgreSQL. Either rehearse an offline load (Data Factory copy or oracle_fdw) and see whether its window is acceptable, or ask the Microsoft account team what options exist for a capture product from outside Microsoft. This advisor recommends none.",
+      "when": {
+        "gap": [
+          "ONLINE_CAPTURE"
+        ]
+      },
+      "sources": [
+        "ms-dms-scenario-status",
+        "ms-pg-migration-service"
+      ]
+    },
+    {
+      "id": "DECIDE-ORACLE-CONTRACT",
+      "phase": "decide",
+      "area": "Commercial",
+      "owner": "Licence management",
+      "title": "Read the Oracle contract for support end date, notice period and any Oracle-on-Azure terms",
+      "detail": "The saving from leaving Oracle depends on the contract, and Oracle's licensing on Azure is a contract question, not an architecture one. Keeping Oracle on Azure virtual machines is the benchmark any saving is measured against.",
+      "when": {
+        "always": true
+      },
+      "sources": [
+        "oracle-cloud-licensing",
+        "oracle-lifetime-support"
+      ]
+    },
+    {
+      "id": "DECIDE-PROGRAMMES",
+      "phase": "decide",
+      "area": "Commercial",
+      "owner": "Account team",
+      "title": "Ask about delivery funding before the project is scoped",
+      "detail": "Frontier Accelerate (formerly Azure Accelerate), Cloud Accelerate Factory and FastTrack have different eligibility, and Microsoft's pages disagree on the programme name. Quote both names and confirm with the programme owner. Nomination and approval are required.",
+      "when": {
+        "always": true
+      },
+      "sources": [
+        "ms-azure-accelerate",
+        "ms-cloud-accelerate-factory",
+        "ms-fasttrack-faq",
+        "ms-partner-center-2026-05"
+      ]
+    },
+    {
+      "id": "DECIDE-CONVERTER-PILOT",
+      "phase": "decide",
+      "area": "Conversion tooling",
+      "owner": "Migration engineer",
+      "title": "Pilot the Microsoft converter on 10 to 15 representative objects first",
+      "detail": "Microsoft lists Oracle 12.1 to 21c and does not list 23ai or 26ai. Include a package with state, a view with CONNECT BY, a trigger, and one object you expect to fail. Reruns of a completed conversion are not supported.",
+      "when": {
+        "schemaConversion": [
+          "MS_VSCODE_AI"
+        ]
+      },
+      "sources": [
+        "ms-oracle-schema-conversion",
+        "ms-oracle-schema-limitations"
+      ]
+    },
+    {
+      "id": "GAP-SCHEMA-CONVERSION",
+      "phase": "decide",
+      "area": "Schema conversion",
+      "owner": "Architect",
+      "title": "Decide how the schema is converted without the Microsoft converter",
+      "detail": "The Microsoft converter does not apply to this estate as it stands: it lists Oracle 12.1 to 21c and needs a Foundry deployment, a Copilot seat and a scratch server. Microsoft publishes no other converter. Either upgrade the source to a listed release, or convert by hand to Microsoft's guidance, or agree a partner with the Microsoft account team. This advisor recommends none.",
+      "when": {
+        "gap": [
+          "SCHEMA_CONVERSION"
+        ]
+      },
+      "sources": [
+        "ms-oracle-schema-limitations"
+      ]
+    },
+    {
+      "id": "DECIDE-APP-TIER",
+      "phase": "decide",
+      "area": "Application",
+      "owner": "Application owner",
+      "title": "List the Oracle components around the database",
+      "detail": "Forms, Reports, APEX, OBIEE, ODI, WebLogic and mod_plsql do not migrate with the database. They are application work with their own estimate.",
+      "when": {
+        "profile": {
+          "app_tier_oracle": [
+            "LIST_APP_TIER",
+            "UNKNOWN",
+            "NOT_SURE"
+          ]
+        }
+      },
+      "basis": "judgement: the converter's own limitations page excludes these"
+    },
+    {
+      "id": "PREP-ORA-ACCOUNT",
+      "phase": "prepare",
+      "area": "Oracle",
+      "owner": "Oracle DBA",
+      "title": "Create a read account for the converter",
+      "detail": "CONNECT, SELECT_CATALOG_ROLE, SELECT ANY DICTIONARY, SELECT on SYS.ARGUMENT$ and SYS.V_$RESOURCE_LIMIT, and the sessions parameter above 10. It needs dictionary access, not table data. The thin driver reaches Oracle 12.1 and later; native encryption or checksums switch it to thick mode (Instant Client).",
+      "when": {
+        "schemaConversion": [
+          "MS_VSCODE_AI"
+        ]
+      },
+      "sources": [
+        "ms-oracle-schema-tutorial",
+        "ms-oracle-schema-conversion"
+      ]
+    },
+    {
+      "id": "PREP-FOUNDRY",
+      "phase": "prepare",
+      "area": "Azure",
+      "owner": "Cloud platform team",
+      "title": "Deploy gpt-5.2 in Microsoft Foundry with more than 1,000,000 tokens per minute of quota",
+      "detail": "Quota requests are the long pole, so file them first. Authenticate by API key or Microsoft Entra ID (Foundry User role). A private endpoint is recommended. Run one project at a time, and for a large schema run VS Code on an Azure VM near Foundry and the scratch server.",
+      "when": {
+        "schemaConversion": [
+          "MS_VSCODE_AI"
+        ]
+      },
+      "sources": [
+        "ms-oracle-schema-tutorial",
+        "ms-vscode-oracle-migration"
+      ]
+    },
+    {
+      "id": "PREP-COPILOT",
+      "phase": "prepare",
+      "area": "Azure",
+      "owner": "Developer platform",
+      "title": "Assign a GitHub Copilot seat (Pro+, Business or Enterprise) to each converter user",
+      "detail": "The tutorial lists it as a requirement and the extension's own prerequisite page does not, so treat it as required for the Ask and Fix steps.",
+      "when": {
+        "schemaConversion": [
+          "MS_VSCODE_AI"
+        ]
+      },
+      "sources": [
+        "ms-oracle-schema-tutorial",
+        "ms-vscode-oracle-migration"
+      ]
+    },
+    {
+      "id": "PREP-SCRATCH",
+      "phase": "prepare",
+      "area": "Azure",
+      "owner": "Cloud platform team",
+      "title": "Create a scratch flexible server on PostgreSQL 15 or later",
+      "detail": "Match the major version to the production target. HorizonDB is not supported as the scratch database. The tool runs DROP SCHEMA ... CASCADE on matching scratch schemas, so never point it at a database that holds anything else. Deploy converted code to a separate non-production database for testing.",
+      "when": {
+        "schemaConversion": [
+          "MS_VSCODE_AI"
+        ]
+      },
+      "sources": [
+        "ms-oracle-schema-tutorial",
+        "ms-oracle-schema-limitations"
+      ]
+    },
+    {
+      "id": "PREP-EXTENSIONS",
+      "phase": "prepare",
+      "area": "Azure",
+      "owner": "Cloud platform team",
+      "title": "Allow-list the extensions the schema needs, then preload the ones that load a library",
+      "detail": "Set azure.extensions, then create each extension per database. plpgsql_check, pg_cron and pg_hint_plan must also be in shared_preload_libraries, which restarts the server. Do this before the first conversion run: with plpgsql_check missing the converter skips its deep validation and still reports Converted. Set a database-level search_path for the orafce schemas.",
+      "when": {
+        "targets": [
+          "pg_flex",
+          "pg_elastic"
+        ]
+      },
+      "sources": [
+        "ms-fs-extensions-versions",
+        "ms-fs-extensions-considerations",
+        "plpgsql-check",
+        "orafce-readme"
+      ]
+    },
+    {
+      "id": "PREP-CREATION-CHOICES",
+      "phase": "prepare",
+      "area": "Azure",
+      "owner": "Architect",
+      "title": "Settle the choices that cannot be changed after the server exists",
+      "detail": "Network mode (private access or public with private endpoint), customer-managed keys, geo-redundant backup and the major version. High availability mode is easier to change but doubles compute and storage cost.",
+      "when": {
+        "targets": [
+          "pg_flex",
+          "pg_elastic"
+        ]
+      },
+      "sources": [
+        "ms-fs-networking",
+        "ms-fs-encryption",
+        "ms-fs-backup"
+      ]
+    },
+    {
+      "id": "PREP-HA-REGION",
+      "phase": "prepare",
+      "area": "Azure",
+      "owner": "Cloud platform team",
+      "title": "Check the target region for zone-redundant HA on the day you deploy",
+      "detail": "New zone-redundant deployments are blocked or unavailable in some regions, and the list changes. A 99.99% target depends on it.",
+      "when": {
+        "targets": [
+          "pg_flex"
+        ],
+        "profile": {
+          "availability_target": [
+            "HIGHEST_99_99"
+          ]
+        }
+      },
+      "sources": [
+        "ms-fs-reliability",
+        "ms-fs-overview"
+      ]
+    },
+    {
+      "id": "PREP-STORAGE",
+      "phase": "prepare",
+      "area": "Azure",
+      "owner": "Cloud platform team",
+      "title": "Choose storage as capacity, IOPS and throughput that can only grow",
+      "detail": "Premium SSD v2 sets the three separately. Storage cannot shrink. Size from the AWR evidence, with headroom for the load, not from the Oracle allocation.",
+      "when": {
+        "targets": [
+          "pg_flex"
+        ]
+      },
+      "sources": [
+        "ms-fs-storage",
+        "ms-fs-pssd-v2",
+        "ms-fs-limits"
+      ]
+    },
+    {
+      "id": "PREP-NETWORK",
+      "phase": "prepare",
+      "area": "Network and security",
+      "owner": "Network team",
+      "title": "Open a private path from the converter workstation and the loader to both databases",
+      "detail": "Use a bastion or a private endpoint rather than public addresses. The loader needs the Oracle listener port and the PostgreSQL port, and any VM that runs the converter should sit near Foundry and the scratch server.",
+      "when": {
+        "always": true
+      },
+      "sources": [
+        "ms-fs-networking"
+      ]
+    },
+    {
+      "id": "PREP-BANDWIDTH",
+      "phase": "prepare",
+      "area": "Network and security",
+      "owner": "Network team",
+      "title": "Time a bulk copy over the real path before promising a window",
+      "detail": "A limited WAN or a multi-terabyte database changes which route is realistic. Measure throughput with a large table, not with a ping.",
+      "when": {
+        "profile": {
+          "network_bandwidth": [
+            "LIMITED_WAN",
+            "VERY_LARGE_MULTI_TB",
+            "UNKNOWN",
+            "NOT_SURE"
+          ]
+        }
+      },
+      "basis": "judgement: throughput is not published for any route"
+    },
+    {
+      "id": "PREP-IDENTITY",
+      "phase": "prepare",
+      "area": "Network and security",
+      "owner": "Security",
+      "title": "Script roles, grants and password policy by hand and move sign-in to Microsoft Entra ID",
+      "detail": "The Microsoft converter does not convert users, roles, profiles or privileges. Flexible server has no superuser and a restricted administrator role.",
+      "when": {
+        "targets": [
+          "pg_flex",
+          "pg_elastic"
+        ]
+      },
+      "sources": [
+        "ms-oracle-schema-limitations",
+        "ms-fs-access-control"
+      ]
+    },
+    {
+      "id": "PREP-ARCHIVELOG",
+      "phase": "prepare",
+      "area": "Oracle",
+      "owner": "Oracle DBA",
+      "title": "Put the source in ARCHIVELOG mode and enable supplemental logging, if change capture will be used",
+      "detail": "Every log-based change-capture product needs both, whichever product the customer chooses. Enabling ARCHIVELOG needs a restart, which is itself downtime, and archive log volume grows. Microsoft offers no capture product, so this is preparation for one from outside Microsoft.",
+      "when": {
+        "gap": [
+          "ONLINE_CAPTURE"
+        ]
+      },
+      "basis": "judgement: a property of log-based capture in general, not of one product"
+    },
+    {
+      "id": "PREP-FDW",
+      "phase": "prepare",
+      "area": "Azure",
+      "owner": "Cloud platform team",
+      "title": "Confirm what oracle_fdw needs on flexible server before relying on it",
+      "detail": "Microsoft lists oracle_fdw 1.2 for PostgreSQL 12 to 18, and lists no prerequisites for the Oracle client libraries or the network alias. This is unverified. It also needs a read account on the source tables and a path from the server to the Oracle listener.",
+      "when": {
+        "dataMovement": [
+          "ORACLE_FDW_COPY"
+        ]
+      },
+      "sources": [
+        "ms-fs-extensions-versions"
+      ]
+    },
+    {
+      "id": "PREP-ADF",
+      "phase": "prepare",
+      "area": "Data movement",
+      "owner": "Migration engineer",
+      "title": "Set up the Data Factory Oracle connector v2.0",
+      "detail": "Connector v1.0 was removed on 2026-03-31, so create linked services with v2.0. Check whether the Oracle listener is reachable from the Azure integration runtime or needs a self-hosted one. The connector moves rows only: no DDL and no change capture.",
+      "when": {
+        "dataMovement": [
+          "ADF_COPY"
+        ]
+      },
+      "sources": [
+        "ms-adf-oracle",
+        "ms-adf-connector-lifecycle"
+      ]
+    },
+    {
+      "id": "PREP-CHARSET",
+      "phase": "prepare",
+      "area": "Data movement",
+      "owner": "Oracle DBA",
+      "title": "Plan the character-set conversion",
+      "detail": "Create the target database as UTF8. Characters that do not map from a legacy or single-byte source character set are a data-quality finding, not a load error to suppress.",
+      "when": {
+        "profile": {
+          "character_set": [
+            "SINGLE_BYTE_LEGACY",
+            "OTHER_MULTIBYTE"
+          ]
+        }
+      },
+      "basis": "judgement: PostgreSQL rejects NUL characters in text and the Oracle character set decides what maps to UTF8"
+    },
+    {
+      "id": "PREP-LOB",
+      "phase": "prepare",
+      "area": "Data movement",
+      "owner": "Migration engineer",
+      "title": "Tune the load for large objects",
+      "detail": "LOB columns dominate load time. Test the largest LOB table first, size the load batches by the largest value, and expect BLOB to land as bytea.",
+      "when": {
+        "scan": {
+          "lobTables": 1
+        }
+      },
+      "basis": "judgement: load behaviour depends on the route and is not published for the Microsoft routes"
+    },
+    {
+      "id": "PREP-LONG",
+      "phase": "prepare",
+      "area": "Data movement",
+      "owner": "Migration engineer",
+      "title": "Give LONG columns a special initial load",
+      "detail": "Change-capture products typically cannot read LONG. Plan a bulk load for the table and a way to catch rows that change during it.",
+      "when": {
+        "scan": {
+          "longColumnTables": 1
+        }
+      },
+      "basis": "judgement: depends on the capture product, which Microsoft does not offer"
+    },
+    {
+      "id": "PREP-PARTITIONS",
+      "phase": "prepare",
+      "area": "Data movement",
+      "owner": "Data architect",
+      "title": "Redesign keys on partitioned tables so the primary key includes the partition key",
+      "detail": "PostgreSQL has no global indexes: a unique or primary key on a partitioned table must contain the partition key. Interval partitioning needs pg_partman. Reference partitioning has no equivalent.",
+      "when": {
+        "scan": {
+          "partitionedTables": 1
+        }
+      },
+      "sources": [
+        "ms-fs-extensions-versions",
+        "ms-oracle-schema-limitations"
+      ]
+    },
+    {
+      "id": "PREP-IOT-XML-GTT",
+      "phase": "prepare",
+      "area": "Data movement",
+      "owner": "Migration engineer",
+      "title": "Handle index-organised tables, XMLType columns and global temporary tables explicitly",
+      "detail": "Load index-organised tables in key order into a heap table, then CLUSTER. Check that XMLType content parses as xml on load. Global temporary tables hold no rows to move, but the definition must exist for every session.",
+      "when": {
+        "mode": "any",
+        "scan": {
+          "indexOrganizedTables": 1,
+          "xmlTables": 1,
+          "globalTemporaryTables": 1
+        }
+      },
+      "basis": "judgement: derived from the object kinds the scan found"
+    },
+    {
+      "id": "REHEARSE-LOAD",
+      "phase": "rehearse",
+      "area": "Data movement",
+      "owner": "Migration engineer",
+      "title": "Rehearse the full load on production-sized data and time it",
+      "detail": "Row counts, LOB sizes and change rate are not in the DDL, so the window cannot be estimated from the schema. Rehearse the full path, including sequence resets and constraint creation.",
+      "when": {
+        "always": true
+      },
+      "basis": "judgement: the scan cannot see data volume"
+    },
+    {
+      "id": "REHEARSE-PLPGSQL-CHECK",
+      "phase": "rehearse",
+      "area": "Validation",
+      "owner": "Migration engineer",
+      "title": "Run plpgsql_check across every converted routine",
+      "detail": "It finds static errors, bad references and type mismatches without running the code. It works in production and is not available on HorizonDB. Converted does not mean the check ran if the extension is missing.",
+      "when": {
+        "targets": [
+          "pg_flex",
+          "pg_elastic",
+          "pg_vm",
+          "pg_aks"
+        ]
+      },
+      "sources": [
+        "plpgsql-check",
+        "ms-fs-extensions-versions"
+      ]
+    },
+    {
+      "id": "REHEARSE-DIFF",
+      "phase": "rehearse",
+      "area": "Validation",
+      "owner": "QA lead",
+      "title": "Run the same queries on Oracle and PostgreSQL and diff the result sets",
+      "detail": "This is the only route that catches a converted query that is wrong and quiet. Start with ROWNUM, (+) joins, empty-string tests, string concatenation with NULL, DECODE with NULL and DATE values with a time part. The same model that converted the code can also review it, so validate independently.",
+      "when": {
+        "always": true
+      },
+      "sources": [
+        "ms-oracle-schema-conversion",
+        "ms-oracle-schema-best-practices"
+      ]
+    },
+    {
+      "id": "REHEARSE-ROWS",
+      "phase": "rehearse",
+      "area": "Validation",
+      "owner": "QA lead",
+      "title": "Compare rows with oracle_fdw foreign tables or hashed row queries",
+      "detail": "Needs a primary or unique key on each table. Create the comparison copy with collation C, or ordering differs from Oracle.",
+      "when": {
+        "always": true
+      },
+      "sources": [
+        "ms-fs-extensions-versions"
+      ]
+    },
+    {
+      "id": "REHEARSE-PLANS",
+      "phase": "rehearse",
+      "area": "Validation",
+      "owner": "Performance engineer",
+      "title": "Compare plans and timings for the queries that carry the business",
+      "detail": "Oracle hints are comments to PostgreSQL. pg_hint_plan is available where a hint is the right fix. Queries that were fast through Exadata offload need indexes, partitioning and tuning instead.",
+      "when": {
+        "always": true
+      },
+      "sources": [
+        "ms-fs-extensions-versions"
+      ]
+    },
+    {
+      "id": "REHEARSE-CONNECTIONS",
+      "phase": "rehearse",
+      "area": "Application",
+      "owner": "Application owner",
+      "title": "Test connection handling against the target's connection limits",
+      "detail": "The default maximum connections depend on the vCores of the SKU, and Oracle shared-server and pooling behaviour does not carry over. Use the built-in connection pooler or an application pool.",
+      "when": {
+        "targets": [
+          "pg_flex",
+          "pg_elastic"
+        ]
+      },
+      "sources": [
+        "ms-fs-limits"
+      ]
+    },
+    {
+      "id": "CUT-HANDOFF",
+      "phase": "cutover",
+      "area": "Data movement",
+      "owner": "Migration engineer",
+      "title": "Fix the handoff point and reset every sequence",
+      "detail": "Record the SCN for a consistent snapshot. Reset sequences to at least the source's last value.",
+      "when": {
+        "always": true
+      },
+      "basis": "judgement: the SCN and the sequence reset are properties of the load, not of one route"
+    },
+    {
+      "id": "CUT-ROLLBACK",
+      "phase": "cutover",
+      "area": "Operations",
+      "owner": "Architect",
+      "title": "Keep Oracle read-only and decide the way back before the window opens",
+      "detail": "No source read for this project describes a supported reverse replication from PostgreSQL to Oracle. If the fallback needs one, name the tool, prove it in the rehearsal and put its licence in the plan.",
+      "when": {
+        "always": true
+      },
+      "basis": "judgement: absence of a documented reverse path"
+    },
+    {
+      "id": "AFTER-BACKUP",
+      "phase": "after",
+      "area": "Operations",
+      "owner": "Cloud platform team",
+      "title": "Set backup retention and test a point-in-time restore",
+      "detail": "A point-in-time restore creates a new server. It is not Flashback and there is no AS OF query. Geo-redundant backup is a creation-time choice.",
+      "when": {
+        "targets": [
+          "pg_flex",
+          "pg_elastic"
+        ]
+      },
+      "sources": [
+        "ms-fs-backup"
+      ]
+    },
+    {
+      "id": "AFTER-VERSION-LIFECYCLE",
+      "phase": "after",
+      "area": "Operations",
+      "owner": "Cloud platform team",
+      "title": "Put the PostgreSQL major version lifecycle in the run book",
+      "detail": "Standard support ends on a published date for each major, and in-place major version upgrade is blocked while some extensions, such as session_variable, are installed.",
+      "when": {
+        "targets": [
+          "pg_flex",
+          "pg_elastic"
+        ]
+      },
+      "sources": [
+        "ms-fs-version-policy",
+        "ms-fs-mvu",
+        "ms-fs-extended-support"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "latest": "v1.0.0",
+  "knowledgeBase": "v1.0",
+  "released": "2026-10-12",
+  "install": "claude plugin marketplace add kloba/oracle-to-postgres-migration-advisor && claude plugin install oracle-to-postgres-migration-advisor@kloba",
+  "update": "claude plugin update oracle-to-postgres-migration-advisor",
+  "note": "Not published yet: the install command works once the repository is pushed to the account named in it. Kept in step with the plugin manifests and package.json by a test."
+}

@@ -1,0 +1,409 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kloba/oracle-to-postgres-migration-advisor/schemas/assessment.schema.json",
+  "title": "Oracle schema assessment (output of tools/assess/oracle-assess.mjs)",
+  "description": "A static scan of DDL and PL/SQL source text. It reads no database, so it cannot see data volume, workload or the application.",
+  "type": "object",
+  "required": [
+    "schema",
+    "name",
+    "scoring",
+    "sources",
+    "totals",
+    "byType",
+    "byClass",
+    "constructs",
+    "hotspots",
+    "packages",
+    "extensions",
+    "blockers",
+    "semanticTraps",
+    "dataMovement",
+    "hygiene",
+    "objects",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "scoring": {
+      "type": "object",
+      "required": [
+        "unitMinutes",
+        "unitsPerPersonDay",
+        "catalogEntries"
+      ],
+      "properties": {
+        "unitMinutes": {
+          "const": 5
+        },
+        "unitsPerPersonDay": {
+          "const": 84
+        },
+        "catalogEntries": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "objects",
+        "loc",
+        "plsqlLoc",
+        "units",
+        "personDaysOra2PgStyle",
+        "level",
+        "difficulty"
+      ],
+      "properties": {
+        "objects": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "loc": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "plsqlLoc": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "units": {
+          "type": "number",
+          "minimum": 0
+        },
+        "personDaysOra2PgStyle": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "level": {
+          "type": "string",
+          "pattern": "^[ABC]-[1-5]$"
+        },
+        "difficulty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      }
+    },
+    "byType": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "count",
+          "loc",
+          "units",
+          "classes"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "loc": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "units": {
+            "type": "number"
+          },
+          "classes": {
+            "type": "object",
+            "required": [
+              "CLEAN",
+              "PARTIAL",
+              "REVIEW",
+              "BLOCKER"
+            ]
+          }
+        }
+      }
+    },
+    "byClass": {
+      "type": "object",
+      "required": [
+        "CLEAN",
+        "PARTIAL",
+        "REVIEW",
+        "BLOCKER"
+      ],
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "constructs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "classification",
+          "weight",
+          "objects",
+          "hits",
+          "units"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "classification": {
+            "enum": [
+              "CLEAN",
+              "PARTIAL",
+              "REVIEW",
+              "BLOCKER"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0
+          },
+          "objects": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "hits": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "units": {
+            "type": "number",
+            "minimum": 0
+          },
+          "affectsClass": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "hotspots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "name",
+          "units"
+        ]
+      }
+    },
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "members",
+          "loc",
+          "units",
+          "class"
+        ],
+        "properties": {
+          "class": {
+            "enum": [
+              "CLEAN",
+              "PARTIAL",
+              "REVIEW",
+              "BLOCKER"
+            ]
+          }
+        }
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "constructs",
+          "objects"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "objects": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "constructs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ]
+      }
+    },
+    "semanticTraps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "objects"
+        ]
+      }
+    },
+    "dataMovement": {
+      "type": "object",
+      "required": [
+        "tables",
+        "lobTables",
+        "partitionedTables",
+        "longColumnTables",
+        "xmlTables",
+        "globalTemporaryTables",
+        "indexOrganizedTables"
+      ],
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "hygiene": {
+      "type": "object",
+      "required": [
+        "unterminated",
+        "dynamicObjects",
+        "duplicates"
+      ],
+      "properties": {
+        "unterminated": {
+          "type": "array"
+        },
+        "dynamicObjects": {
+          "type": "array"
+        },
+        "duplicates": {
+          "type": "array"
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "name",
+          "loc",
+          "units",
+          "class",
+          "hits"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "TABLE",
+              "VIEW",
+              "SYNONYM",
+              "INDEX",
+              "FUNCTION",
+              "PROCEDURE",
+              "TRIGGER",
+              "PACKAGE",
+              "PACKAGE_BODY",
+              "SEQUENCE",
+              "TYPE",
+              "TYPE_BODY",
+              "CONSTRAINT",
+              "MATERIALIZED_VIEW",
+              "MATERIALIZED_VIEW_LOG",
+              "JOB",
+              "SCHEDULE",
+              "PROGRAM",
+              "CHAIN",
+              "JOB_CLASS",
+              "VPD_POLICY",
+              "FGA_POLICY",
+              "REFRESH_GROUP",
+              "USER",
+              "ROLE",
+              "PROFILE",
+              "CONTEXT",
+              "DATABASE_LINK",
+              "DIRECTORY",
+              "LIBRARY",
+              "OTHER",
+              "LEGACY_JOB",
+              "WINDOW",
+              "QUEUE"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "loc": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "units": {
+            "type": "number",
+            "minimum": 0
+          },
+          "class": {
+            "enum": [
+              "CLEAN",
+              "PARTIAL",
+              "REVIEW",
+              "BLOCKER"
+            ]
+          },
+          "hits": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "count"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

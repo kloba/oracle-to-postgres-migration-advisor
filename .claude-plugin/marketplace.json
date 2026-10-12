@@ -1,0 +1,29 @@
+{
+  "name": "kloba",
+  "metadata": {
+    "description": "Skills published by kloba.",
+    "version": "1.0.0"
+  },
+  "owner": {
+    "name": "kloba"
+  },
+  "plugins": [
+    {
+      "name": "oracle-to-postgres-migration-advisor",
+      "source": "./",
+      "version": "1.0.0",
+      "description": "Interview-driven Oracle to Azure PostgreSQL migration assessment. Runs a guided interview, scans Oracle source with no database connection, applies a source-backed knowledge base and a versioned rule set, and returns a provisional target, method, blockers and evidence gaps, with a rule ID behind every verdict, a prerequisite plan and a PDF report. It recommends Microsoft services and Azure-hosted offerings only; where Microsoft has no product, it says so and names none.",
+      "author": {
+        "name": "kloba"
+      },
+      "keywords": [
+        "oracle",
+        "postgresql",
+        "azure",
+        "migration",
+        "assessment"
+      ],
+      "category": "developer-tools"
+    }
+  ]
+}

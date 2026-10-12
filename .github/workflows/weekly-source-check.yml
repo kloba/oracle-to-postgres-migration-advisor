@@ -1,0 +1,25 @@
+name: Weekly source check
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sources:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Every source resolves and the register was read recently
+        run: node tools/check-sources.mjs --max-age-days 45 --json source-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-report
+          path: source-report.json

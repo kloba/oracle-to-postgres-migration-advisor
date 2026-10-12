@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kloba/oracle-to-postgres-migration-advisor/schemas/input.schema.json",
+  "title": "Oracle to PostgreSQL advisor: interview profile",
+  "description": "Generated from reference/input-contract.md. Every field is optional; an absent field is UNKNOWN and is never read as \"none\".",
+  "type": "object",
+  "properties": {
+    "scope": {
+      "enum": [
+        "SINGLE_DB",
+        "FEW_DATABASES",
+        "LARGE_ESTATE",
+        "UNKNOWN"
+      ]
+    },
+    "source_location": {
+      "enum": [
+        "ON_PREM",
+        "AZURE_VM",
+        "AWS_EC2",
+        "AWS_RDS_ORACLE",
+        "GCP_COMPUTE",
+        "OCI_OR_AUTONOMOUS",
+        "ORACLE_DB_AT_AZURE",
+        "EXADATA_ON_PREM",
+        "UNKNOWN"
+      ]
+    },
+    "source_version": {
+      "enum": [
+        "ORA_11G_OR_OLDER",
+        "ORA_12C",
+        "ORA_18C",
+        "ORA_19C",
+        "ORA_21C",
+        "ORA_23AI_26AI",
+        "UNKNOWN"
+      ]
+    },
+    "topology": {
+      "enum": [
+        "SINGLE_INSTANCE",
+        "RAC",
+        "EXADATA",
+        "UNKNOWN"
+      ]
+    },
+    "edition": {
+      "enum": [
+        "SE2",
+        "EE",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "character_set": {
+      "enum": [
+        "AL32UTF8",
+        "SINGLE_BYTE_LEGACY",
+        "OTHER_MULTIBYTE",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "intent": {
+      "enum": [
+        "MIGRATE_NOW",
+        "ASSESSMENT_ONLY",
+        "REHOST_FIRST",
+        "UNKNOWN"
+      ]
+    },
+    "driver": {
+      "enum": [
+        "ORACLE_LICENSE_COST",
+        "SUPPORT_LIFECYCLE",
+        "APP_MODERNIZATION",
+        "OPEN_SOURCE_STRATEGY",
+        "DATACENTER_EXIT",
+        "PERFORMANCE_SCALE",
+        "UNKNOWN"
+      ]
+    },
+    "management_model": {
+      "enum": [
+        "MANAGED_PAAS",
+        "OS_CONTROL",
+        "KUBERNETES",
+        "UNKNOWN"
+      ]
+    },
+    "app_changeability": {
+      "enum": [
+        "APP_CHANGEABLE",
+        "APP_LIMITED",
+        "APP_FROZEN",
+        "PACKAGED_ISV",
+        "UNKNOWN"
+      ]
+    },
+    "isv_supports_postgres": {
+      "enum": [
+        "YES",
+        "NO",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "compliance": {
+      "enum": [
+        "STANDARD_COMMERCIAL",
+        "EU_DATA_BOUNDARY",
+        "GOVERNMENT_SOVEREIGN",
+        "EDGE_AIR_GAPPED",
+        "UNKNOWN"
+      ]
+    },
+    "region": {
+      "type": "string",
+      "description": "An Azure region name such as swedencentral, or NOT_SURE."
+    },
+    "preview_acceptable": {
+      "enum": [
+        "PREVIEW_ACCEPTED",
+        "PREVIEW_REFUSED",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "cmk_required": {
+      "enum": [
+        "CMK_YES",
+        "CMK_NO",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "largest_db_size": {
+      "enum": [
+        "UNDER_1_TB",
+        "FROM_1_TO_8_TB",
+        "FROM_8_TO_32_TB",
+        "FROM_32_TO_64_TB",
+        "FROM_64_TO_128_TB",
+        "OVER_128_TB",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "peak_io": {
+      "enum": [
+        "UNDER_20K_IOPS",
+        "FROM_20K_TO_80K_IOPS",
+        "OVER_80K_IOPS",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "peak_compute": {
+      "enum": [
+        "UP_TO_96_VCORES",
+        "FROM_97_TO_192_VCORES",
+        "OVER_192_VCORES",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "availability_target": {
+      "enum": [
+        "STANDARD_99_9",
+        "HIGH_99_95",
+        "HIGHEST_99_99",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "dr_requirement": {
+      "enum": [
+        "NO_CROSS_REGION_DR",
+        "ASYNC_CROSS_REGION",
+        "ZERO_RPO_CROSS_REGION",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "feature_dependencies": {
+      "enum": [
+        "NONE_CONFIRMED",
+        "LIST_FEATURES",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "oracle_features": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "RAC_WRITE_SCALE",
+          "RAC_HA_ONLY",
+          "ADVANCED_QUEUING",
+          "JAVA_IN_DATABASE",
+          "EXTERNAL_PROCEDURES_C",
+          "NETWORK_FROM_DATABASE",
+          "FILE_ACCESS_FROM_DATABASE",
+          "SPATIAL_BASIC",
+          "SPATIAL_ADVANCED",
+          "ORACLE_TEXT",
+          "XML_SCHEMA_BASED",
+          "MULTIMEDIA",
+          "VPD",
+          "LABEL_OR_VAULT",
+          "FLASHBACK_USE",
+          "EDITION_BASED_REDEFINITION",
+          "DB_LINKS_TO_ORACLE",
+          "EXTERNAL_TABLES",
+          "SCHEDULER_ADVANCED",
+          "WEB_FROM_DATABASE",
+          "AUTONOMOUS_TRANSACTIONS",
+          "PACKAGE_STATE",
+          "OBJECT_TYPE_INHERITANCE",
+          "MV_FAST_REFRESH",
+          "HEAVY_PARTITIONING",
+          "COLUMN_ENCRYPTION",
+          "EXADATA_OFFLOAD"
+        ]
+      },
+      "description": "Read only when feature_dependencies is LIST_FEATURES."
+    },
+    "plsql_volume": {
+      "enum": [
+        "NONE_OR_LIGHT",
+        "MODERATE",
+        "HEAVY",
+        "VERY_HEAVY",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "app_tier_oracle": {
+      "enum": [
+        "NONE_CONFIRMED",
+        "LIST_APP_TIER",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "downtime": {
+      "enum": [
+        "NEAR_ZERO",
+        "MINIMAL",
+        "OFFLINE",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "network_bandwidth": {
+      "enum": [
+        "GOOD_BANDWIDTH",
+        "LIMITED_WAN",
+        "VERY_LARGE_MULTI_TB",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "private_connectivity": {
+      "enum": [
+        "PRIVATE_LINK_READY",
+        "PUBLIC_ONLY",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "converter_prereqs": {
+      "enum": [
+        "FOUNDRY_AND_COPILOT_READY",
+        "FOUNDRY_OR_COPILOT_MISSING",
+        "NOT_SURE",
+        "UNKNOWN"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "EFFORT_ESTIMATE",
+          "VSCODE_DISCOVERY",
+          "SCHEMA_SCAN",
+          "AWR_SIZING",
+          "NONE"
+        ]
+      },
+      "description": "Artefacts already in hand. A claim to verify elsewhere, never proof."
+    }
+  },
+  "additionalProperties": false
+}

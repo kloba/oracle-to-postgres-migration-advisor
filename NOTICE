@@ -1,0 +1,49 @@
+oracle-to-postgres-migration-advisor
+
+Licensed under the MIT License. See LICENSE for the full text.
+
+This project contains an Oracle to Azure PostgreSQL migration knowledge base, a distilled decision
+rule set, an executable decision engine with its tests, a static Oracle schema assessor, a
+prerequisite plan generator and a PDF report builder.
+
+Design lineage
+--------------
+The structure of this project follows fredgis/sql-migration-advisor (https://github.com/fredgis/sql-migration-advisor),
+a SQL Server to Azure migration advisor: an interview that produces an input contract with stable IDs, a
+hard-eligibility trace over every target family, ranked survivors, method candidates, an output contract with
+self-check invariants, rule IDs behind every verdict, an executable mirror of the rules, golden scenarios, a
+sources register and a provisional status that never rises above medium confidence. Some asking rules in the
+skills are adapted from its skills, because they record failures it observed in real sessions.
+
+    sql-migration-advisor is licensed under the MIT License.
+    Copyright (c) Microsoft Corporation.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+    associated documentation files (the "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+    following conditions: The above copyright notice and this permission notice shall be included in all copies
+    or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+
+Ora2Pg
+------
+The cost model in tools/assess reproduces the scoring that Ora2Pg 25.0 documents in its manual and in
+lib/Ora2Pg/PLSQL.pm: 5 minutes per unit, 84 units per person-day, the per-construct weights, the object
+scores, the migration levels A, B and C. It uses them as a yardstick for the effort estimate and does not recommend, assess or run the tool. This project contains no Ora2Pg source code and does not link to it.
+Ora2Pg is licensed under the GNU General Public License v3 (https://github.com/darold/ora2pg). Weights that
+come from Ora2Pg are marked `ora2pg-25.0:<KEY>` in reference/compat-catalog.json; all other weights are this
+project's own and are marked `advisor`.
+
+Example schema
+--------------
+examples/contoso-store/run.sh scans the Contoso Store Oracle to PostgreSQL migration lab
+(https://github.com/kloba/oracle-to-postgres-migration-lab, MIT License,
+Copyright (c) 2026 Contoso Store Migration Lab contributors). The lab is cloned on demand and is not
+redistributed here.
+
+Trademarks and sources
+----------------------
+Microsoft, Azure, Microsoft Foundry, GitHub, GitHub Copilot, Oracle, PostgreSQL and other product names are
+trademarks of their owners. This project cites
+vendor documentation as source material (see reference/sources.json) and is not affiliated with or endorsed
+by any of them. Facts about vendor products were read on the date recorded in the register and can change.
